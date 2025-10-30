@@ -18,9 +18,12 @@ function Search( {searchParams, setSearchParams, setFetchFlag} ) {
 
 function AnimeCard( {title, img} ) {
     return (
-        <div>
-            <img src={img} />
-            <p>{title}</p>
+        <div className="anime-card">
+            <div className="anime-name-img">
+                <img src={img}/>
+                <div>{title}</div>
+            </div>
+            <button>Add</button>
         </div>
     )
 }
@@ -43,7 +46,7 @@ function CreateGame() {
                 const top8 = sorted.slice(0, 8).map((item) => {
                     return {
                         id: item.mal_id,
-                        title: item.title_english,
+                        title: item.title_english || item.title,
                         img: item.images.jpg.image_url
                     };
                 });
