@@ -16,14 +16,22 @@ function Search( {searchParams, setSearchParams, setFetchFlag} ) {
     )
 }
 
-function AnimeCard( {title, img} ) {
+function AnimeCard( {handleSelect, title, img} ) {
     return (
         <div className="anime-card">
             <div className="anime-name-img">
                 <img src={img}/>
                 <div>{title}</div>
             </div>
-            <button>Add</button>
+            <button onClick={handleSelect}>Add</button>
+        </div>
+    )
+}
+
+function SelectedCard( {anime} ) {
+    return (
+        <div className="selected-card">
+            {anime.title}
         </div>
     )
 }
@@ -34,6 +42,19 @@ function CreateGame() {
     const [selected, setSelected] = useState([]);
     const [searchParams, setSearchParams] = useState("");
     const [fetchFlag, setFetchFlag] = useState(false);
+    const [code, setCode] = useState("");
+
+    const alphabet = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    const base = alphabet.length;
+
+    const encodeNumber = (num) => {
+        let str = "";
+        while (num > 0) {
+            str = alphabet[num % base] + str;
+            num = Math.floor(num / base);
+        }
+        return str || "0";
+    }
 
     useEffect(() => {
         if(!fetchFlag) return;
@@ -44,8 +65,9 @@ function CreateGame() {
                 const data = await res.json();
                 const sorted = data.data.sort((a, b) => b.favorites - a.favorites);
                 const top8 = sorted.slice(0, 8).map((item) => {
+                    let modID = item.mal_id.toString().padStart(5, "0");
                     return {
-                        id: item.mal_id,
+                        id: modID,
                         title: item.title_english || item.title,
                         img: item.images.jpg.image_url
                     };
@@ -61,6 +83,16 @@ function CreateGame() {
         void fetchSearch();
     }, [fetchFlag]);
 
+    const handleSelect = (result) => {
+        setSelected(prev => [...prev, result]);
+    }
+
+    const handleCodeCreation = () => {
+        const encodedParts = selected.map(result => encodeNumber(parseInt(result.id)));
+        const code = encodedParts.join("-");
+        setCode(code);
+    };
+
     return (
         <div id={"createpage"}>
             <div id="create-header">
@@ -74,11 +106,31 @@ function CreateGame() {
             <div id="search-results">
                 {results.length === 0
                     ? "Please search for an anime"
-                    : results.map(result => <AnimeCard key={result.id} title={result.title} img={result.img}/>)
+                    : results.map(result =>
+                        <AnimeCard
+                            key={result.id}
+                            handleSelect={() => handleSelect(result)}
+                            title={result.title}
+                            img={result.img}
+                        />)
                 }
             </div>
             <div id="selected-animes">
-
+                <div id="selected-div">
+                    {selected.length === 0
+                        ? "Please select at least 1 anime"
+                        : selected.map(result => <SelectedCard key={result.id} anime={result}/>)
+                    }
+                </div>
+                <div id="create-code-div">
+                    <button onClick={handleCodeCreation}>Generate Code</button>
+                    <p>
+                        {code.length === 0
+                            ? ""
+                            : code
+                        }
+                    </p>
+                </div>
             </div>
         </div>
     )
