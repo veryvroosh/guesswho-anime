@@ -1,0 +1,29 @@
+#playpage {
+  display: grid;
+  grid-template-rows: max-content 1fr;
+  height: 100vh;
+}
+
+#play-header {
+  background-color: cornflowerblue;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+}
+
+#playpage-main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#enter-code-div {
+  font-size: 32px;
+  display: flex;
+  position: relative;
+  top: -100px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
