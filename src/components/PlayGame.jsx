@@ -1,11 +1,22 @@
 import '../styles/PlayPage.css'
 import {useEffect, useState} from "react";
 
-function GameInstance( {chars, setChars} ) {
+function CharCard( {name, img} ) {
+    return (
+        <div className="char-card">
+            <img src={img} alt={name} />
+            <p>{name}</p>
+        </div>
+    )
+}
+
+function GameInstance({chars} ) {
 
     return (
         <div id="game-instance">
-
+            {chars.map((char) => (
+                <CharCard key={char.id} name={char.name} img={char.img}/>
+            ))}
         </div>
     )
 }

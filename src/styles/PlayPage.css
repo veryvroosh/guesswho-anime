@@ -27,3 +27,20 @@
   justify-content: center;
   align-items: center;
 }
+
+#game-instance {
+  display: grid;
+  gap: 16px;
+  grid-template-rows: 1fr 1fr 1fr;
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.char-card img {
+  height: 150px;
+  width: auto;
+  margin-right: 18px;
+}
+
+.char-card p {
+  margin: 0;
+}
